@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
-import { ArrowLeft, Flag, Image as ImageIcon, HelpCircle } from "lucide-react"
+import { ArrowLeft, Flag, Image as ImageIcon, HelpCircle, Trophy } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import Image from "next/image"
@@ -17,11 +17,21 @@ export default function SteganographyChallenge() {
   const [isLoading, setIsLoading] = useState(true)
   const [hintUnlocked, setHintUnlocked] = useState(false)
   const [hintCost] = useState(50) // Half of 100 points
+  const [userPoints, setUserPoints] = useState(0)
 
   // Check if question is already solved and hint status
   useEffect(() => {
     async function checkStatus() {
       try {
+        // Get user data first
+        const authResponse = await fetch('/api/auth/check', {
+          credentials: 'include'
+        });
+        const authData = await authResponse.json();
+        if (authData.authenticated) {
+          setUserPoints(authData.user.points);
+        }
+
         const response = await fetch('/api/questions', {
           credentials: 'include'
         })
@@ -55,6 +65,7 @@ export default function SteganographyChallenge() {
       
       if (data.success) {
         setHintUnlocked(true)
+        setUserPoints(prev => prev - hintCost)
       } else {
         setError(data.error || 'Failed to unlock hint')
       }
@@ -84,6 +95,7 @@ export default function SteganographyChallenge() {
       if (data.success) {
         setSuccess(true)
         setIsSolved(true)
+        setUserPoints(prev => prev + data.points)
         setError(`Congratulations! You earned ${data.points} points!`)
         setTimeout(() => {
           router.refresh()
@@ -98,6 +110,27 @@ export default function SteganographyChallenge() {
     }
   }
 
+  // Add function to refresh points
+  const refreshPoints = async () => {
+    try {
+      const authResponse = await fetch('/api/auth/check', {
+        credentials: 'include'
+      });
+      const authData = await authResponse.json();
+      if (authData.authenticated) {
+        setUserPoints(authData.user.points);
+      }
+    } catch (error) {
+      console.error('Failed to refresh points:', error);
+    }
+  };
+
+  // Add interval to refresh points periodically
+  useEffect(() => {
+    const interval = setInterval(refreshPoints, 10000); // Refresh every 10 seconds
+    return () => clearInterval(interval);
+  }, []);
+
   if (isLoading) {
     return <div className="min-h-screen bg-[#0F1117] text-white flex items-center justify-center">
       Loading...
@@ -108,12 +141,18 @@ export default function SteganographyChallenge() {
     <div className="min-h-screen bg-[#0F1117] text-white">
       <div className="container mx-auto px-4 py-8">
         <div className="mb-8">
-          <div className="flex items-center gap-4 mb-2">
-            <Link href="/dashboard" className="text-[#00FF9D] hover:text-[#00FF9D]/80">
-              <ArrowLeft className="h-5 w-5" />
-              <span className="sr-only">Back to Dashboard</span>
-            </Link>
-            <h1 className="text-2xl font-bold">Hidden in Plain Sight</h1>
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-4">
+              <Link href="/dashboard" className="text-[#00FF9D] hover:text-[#00FF9D]/80">
+                <ArrowLeft className="h-5 w-5" />
+                <span className="sr-only">Back to Dashboard</span>
+              </Link>
+              <h1 className="text-2xl font-bold">Hidden in Plain Sight</h1>
+            </div>
+            <div className="flex items-center gap-2 px-3 py-1.5 bg-[#171B26] rounded-lg border border-gray-800">
+              <Trophy className="h-4 w-4 text-[#00FF9D]" />
+              <span className="font-medium text-[#00FF9D]">{userPoints} pts</span>
+            </div>
           </div>
           <div className="flex items-center gap-4 text-sm text-gray-400">
             <span className="bg-[#171B26] px-2 py-1 rounded">Steganography</span>

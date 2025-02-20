@@ -163,6 +163,11 @@ export default function Dashboard() {
             Leaderboard
           </Link>
 
+          <div className="flex items-center gap-2 px-3 py-1.5 bg-gray-900 rounded-lg border border-gray-800">
+            <Trophy className="h-4 w-4 text-[#00FF9D]" />
+            <span className="font-medium text-[#00FF9D]">{userData?.points || 0} pts</span>
+          </div>
+
           <Collapsible open={userMenuOpen} onOpenChange={setUserMenuOpen}>
             <CollapsibleTrigger>
               <div className="w-9 h-9 rounded-full bg-[#00FF9D] text-black font-medium flex items-center justify-center hover:bg-[#00FF9D]/90 transition-colors">
@@ -173,6 +178,9 @@ export default function Dashboard() {
               <div className="p-3 border-b border-gray-800">
                 <p className="text-sm text-gray-400">Logged in as</p>
                 <p className="font-medium">{userData?.username}</p>
+                <p className="text-sm text-[#00FF9D] mt-1">
+                  {userData?.points || 0} points
+                </p>
               </div>
               <button
                 onClick={handleLogout}
