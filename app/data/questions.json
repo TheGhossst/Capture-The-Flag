@@ -1,0 +1,94 @@
+{
+  "challenges": [
+    {
+      "id": "web-1",
+      "category": "Web Exploitation",
+      "challenges": [
+        {
+          "id": "1",
+          "title": "SQL Injection Basics",
+          "points": 100,
+          "difficulty": "Easy",
+          "solved": false,
+          "description": "Find the flag by exploiting a basic SQL injection vulnerability.",
+          "flag": "flag{sql_injection_101}"
+        },
+        {
+          "id": "2",
+          "title": "XSS Challenge",
+          "points": 200,
+          "difficulty": "Medium",
+          "solved": false,
+          "description": "Execute a cross-site scripting attack to reveal the flag.",
+          "flag": "flag{xss_master}"
+        },
+        {
+          "id": "3",
+          "title": "CSRF Attack",
+          "points": 300,
+          "difficulty": "Hard",
+          "solved": false,
+          "description": "Exploit CSRF vulnerability to capture the flag.",
+          "flag": "flag{csrf_expert}"
+        }
+      ]
+    },
+    {
+      "id": "crypto-1",
+      "category": "Cryptography",
+      "challenges": [
+        {
+          "id": "4",
+          "title": "Basic Encryption",
+          "points": 150,
+          "difficulty": "Easy",
+          "solved": false,
+          "description": "Decrypt this basic cipher to find the flag.",
+          "flag": "flag{crypto_beginner}"
+        },
+        {
+          "id": "5",
+          "title": "RSA Challenge",
+          "points": 250,
+          "difficulty": "Medium",
+          "solved": false,
+          "description": "Break this RSA encryption to reveal the flag.",
+          "flag": "flag{rsa_cracker}"
+        },
+        {
+          "id": "6",
+          "title": "Advanced Cipher",
+          "points": 400,
+          "difficulty": "Hard",
+          "solved": false,
+          "description": "Solve this advanced encryption puzzle.",
+          "flag": "flag{cipher_master}"
+        }
+      ]
+    },
+    {
+      "id": "forensics-1",
+      "category": "Digital Forensics",
+      "challenges": [
+        {
+          "id": "7",
+          "title": "Memory Analysis",
+          "points": 200,
+          "difficulty": "Medium",
+          "solved": false,
+          "description": "Analyze this memory dump to find the flag.",
+          "flag": "flag{memory_hunter}"
+        },
+        {
+          "id": "8",
+          "title": "Network Packet Analysis",
+          "points": 300,
+          "difficulty": "Hard",
+          "solved": false,
+          "description": "Find the flag hidden in these network packets.",
+          "flag": "flag{packet_master}"
+        }
+      ]
+    }
+  ]
+} 
