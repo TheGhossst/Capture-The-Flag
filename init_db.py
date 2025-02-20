@@ -45,6 +45,16 @@ def init_db():
             UNIQUE(user_id, question_id)
         )
     ''')
+    
+    cursor.execute('''CREATE TABLE IF NOT EXISTS unlocked_hints (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id INTEGER NOT NULL,
+  question_id INTEGER NOT NULL,
+  unlocked_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id),
+  FOREIGN KEY (question_id) REFERENCES questions(id),
+  UNIQUE(user_id, question_id)
+);''')
 
     # Create test users
     test_users = [
@@ -65,6 +75,15 @@ def init_db():
 
     # Sample questions
     questions = [
+        {
+            'title': 'Hidden in Plain Sight',
+            'description': 'Find the hidden flag. Remember, not everything is as it seems.',
+            'category': 'Steganography',
+            'difficulty': 'Easy',
+            'points': 100,
+            'flag': 'flag{steg0_b3ginner}',
+            'hint': 'The answer is right there'
+        },
         {
             'title': 'SQL Injection Basics',
             'description': 'Find the flag by exploiting a basic SQL injection vulnerability.',
@@ -118,4 +137,4 @@ def init_db():
     print("Database initialized successfully")
 
 if __name__ == "__main__":
-    init_db() 
+    init_db()

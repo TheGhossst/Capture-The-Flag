@@ -10,7 +10,7 @@ export async function getDb() {
       filename: './ctf.db',
       driver: Database
     });
-    
+
     await initDb();
   }
   return db;
@@ -18,7 +18,7 @@ export async function getDb() {
 
 async function initDb() {
   const db = await getDb();
-  
+
   // Create users table
   await db.exec(`
     CREATE TABLE IF NOT EXISTS users (
@@ -59,6 +59,17 @@ async function initDb() {
     )
   `);
 
+  await db.exec(`CREATE TABLE IF NOT EXISTS unlocked_hints (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    question_id INTEGER NOT NULL,
+    unlocked_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (question_id) REFERENCES questions(id),
+    UNIQUE(user_id, question_id)
+  )`
+  );
+
   // Insert initial questions if none exist
   const count = await db.get('SELECT COUNT(*) as count FROM questions');
   if (count.count === 0) {
@@ -92,7 +103,7 @@ async function initDb() {
           points, flag, hint
         ) VALUES (?, ?, ?, ?, ?, ?, ?)
       `, [
-        q.title, q.description, q.category, 
+        q.title, q.description, q.category,
         q.difficulty, q.points, hashedFlag, q.hint
       ]);
     }

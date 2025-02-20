@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation"
 import { Trophy, LogOut, Flag, Users, CheckCircle, Lock, ChevronDown } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
-import { Progress } from "./components/progress"
+import { Progress, ProgressBar } from "./components/progress"
 
 interface Challenge {
   id: number
@@ -25,6 +25,14 @@ interface Category {
   challenges: Challenge[]
 }
 
+interface UserStats {
+  totalPoints: number
+  solvedChallenges: number
+  totalChallenges: number
+  rank: number
+  totalParticipants: number
+}
+
 export default function Dashboard() {
   const router = useRouter()
   const [openChallenge, setOpenChallenge] = useState<string | null>(null)
@@ -32,7 +40,7 @@ export default function Dashboard() {
   const [userData, setUserData] = useState<{ id: number; username: string; points: number } | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [challenges, setChallenges] = useState<Category[]>([])
-  const [stats, setStats] = useState({
+  const [stats, setStats] = useState<UserStats>({
     totalPoints: 0,
     solvedChallenges: 0,
     totalChallenges: 0,
@@ -43,7 +51,7 @@ export default function Dashboard() {
   useEffect(() => {
     async function fetchData() {
       try {
-        // Check authentication
+        // Check authentication and get user data
         const authResponse = await fetch('/api/auth/check', {
           credentials: 'include'
         });
@@ -68,12 +76,15 @@ export default function Dashboard() {
           (total: number, category: Category) => total + category.challenges.length,
           0
         );
+        
         const solvedChallenges = questionsData.reduce(
           (total: number, category: Category) =>
             total + category.challenges.filter(c => c.solved).length,
           0
         );
-        const totalPoints = questionsData.reduce(
+
+        // Calculate total points earned (from solved challenges)
+        const earnedPoints = questionsData.reduce(
           (total: number, category: Category) =>
             total + category.challenges.reduce(
               (sum, challenge) => sum + (challenge.solved ? challenge.points : 0),
@@ -83,17 +94,16 @@ export default function Dashboard() {
         );
 
         setStats({
-          totalPoints,
+          totalPoints: authData.user.points, // Use points from auth check
           solvedChallenges,
           totalChallenges,
-          rank: authData.user.rank || 0,
-          totalParticipants: authData.totalParticipants || 0
+          rank: authData.user.rank,
+          totalParticipants: authData.totalParticipants
         });
 
+        setIsLoading(false);
       } catch (error) {
         console.error('Failed to fetch data:', error);
-        router.push('/login');
-      } finally {
         setIsLoading(false);
       }
     }
@@ -220,7 +230,7 @@ export default function Dashboard() {
 
         <div className="bg-gray-900 rounded-lg p-6 border border-gray-800 mb-8">
           <h2 className="text-xl font-semibold mb-4">Overall Progress</h2>
-          <Progress
+          <ProgressBar
             value={(stats.solvedChallenges / stats.totalChallenges) * 100}
             className="bg-gray-800 h-2"
             indicatorClassName="bg-[#00FF9D]"
