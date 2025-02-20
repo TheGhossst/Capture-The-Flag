@@ -45,6 +45,7 @@ export default function LoginPage() {
       }
     } catch (err) {
       toast.error('An error occurred. Please try again.', { id: loadingToast })
+      console.log(err)
     } finally {
       setIsLoading(false)
     }

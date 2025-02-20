@@ -5,6 +5,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Button } from "@/components/ui/button"
 import { ChevronDown, ChevronUp, Trophy } from "lucide-react"
 import Link from "next/link"
+import React from "react"
 
 interface Participant {
   id: number
@@ -32,19 +33,13 @@ export function LeaderboardTable() {
   const [isLoading, setIsLoading] = useState(true)
   const [sortField, setSortField] = useState<string>("rank")
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc")
-  const [searchQuery, setSearchQuery] = useState("")
 
-  useEffect(() => {
-    fetchLeaderboard()
-  }, [pagination.currentPage, searchQuery])
-
-  const fetchLeaderboard = async () => {
+  const fetchLeaderboard = React.useCallback(async () => {
     try {
       setIsLoading(true)
       const params = new URLSearchParams({
         page: pagination.currentPage.toString(),
         limit: "10",
-        search: searchQuery
       })
 
       const response = await fetch(`/api/leaderboard?${params}`, {
@@ -61,7 +56,11 @@ export function LeaderboardTable() {
     } finally {
       setIsLoading(false)
     }
-  }
+  }, [pagination.currentPage])
+
+  useEffect(() => {
+    fetchLeaderboard()
+  }, [fetchLeaderboard])
 
   const handleSort = (field: string) => {
     if (field === sortField) {

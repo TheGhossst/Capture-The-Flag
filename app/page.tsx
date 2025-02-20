@@ -21,6 +21,7 @@ export default function Home() {
         const data = await response.json()
         setIsAuthenticated(data.authenticated)
       } catch (error) {
+        console.error('Failed to check authentication:', error)
         setIsAuthenticated(false)
       }
     }

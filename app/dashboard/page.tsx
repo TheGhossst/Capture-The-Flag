@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation"
 import { Trophy, LogOut, Flag, Users, CheckCircle, Lock, ChevronDown } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
-import { Progress, ProgressBar } from "./components/progress"
+import { ProgressBar } from "./components/progress"
 
 interface Challenge {
   id: number
@@ -84,14 +84,14 @@ export default function Dashboard() {
         );
 
         // Calculate total points earned (from solved challenges)
-        const earnedPoints = questionsData.reduce(
+        /*const earnedPoints = questionsData.reduce(
           (total: number, category: Category) =>
             total + category.challenges.reduce(
               (sum, challenge) => sum + (challenge.solved ? challenge.points : 0),
               0
             ),
           0
-        );
+        );*/
 
         setStats({
           totalPoints: authData.user.points, // Use points from auth check

@@ -20,6 +20,7 @@ export async function createUser(username: string, password: string) {
     );
     return { success: true };
   } catch (error) {
+    console.error('Failed to create user:', error);
     return { success: false, error: 'Username already exists' };
   }
 }

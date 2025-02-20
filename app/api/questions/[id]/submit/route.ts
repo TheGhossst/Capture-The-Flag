@@ -6,7 +6,7 @@ import bcrypt from 'bcrypt';
 
 export async function POST(
   request: Request,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
   const db = await getDb();
   
@@ -20,7 +20,15 @@ export async function POST(
     }
 
     const { flag } = await request.json();
-    const questionId = parseInt(params.id);
+    const { id } = context.params;
+    const questionId = parseInt(id);
+
+    if (isNaN(questionId)) {
+      return NextResponse.json({ 
+        success: false, 
+        error: 'Invalid question ID' 
+      });
+    }
 
     // Get question with points
     const question = await db.get(

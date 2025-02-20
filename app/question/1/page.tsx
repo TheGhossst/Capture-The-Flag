@@ -3,10 +3,36 @@
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
-import { ArrowLeft, Flag, Image as ImageIcon, HelpCircle, Trophy } from "lucide-react"
+import { ArrowLeft, Flag, HelpCircle, Trophy } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import Image from "next/image"
+
+// Add interfaces for type safety
+interface Challenge {
+  id: number
+  title: string
+  description: string
+  difficulty: string
+  points: number
+  hint: string
+  solved: boolean
+  hintUnlocked: boolean
+}
+
+interface Category {
+  id: string
+  category: string
+  challenges: Challenge[]
+}
+
+interface AuthResponse {
+  authenticated: boolean
+  user: {
+    id: number
+    username: string
+    points: number
+  }
+}
 
 export default function SteganographyChallenge() {
   const router = useRouter()
@@ -16,7 +42,7 @@ export default function SteganographyChallenge() {
   const [isSolved, setIsSolved] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
   const [hintUnlocked, setHintUnlocked] = useState(false)
-  const [hintCost] = useState(50) // Half of 100 points
+  const [hintCost] = useState(50)
   const [userPoints, setUserPoints] = useState(0)
 
   // Check if question is already solved and hint status
@@ -27,7 +53,7 @@ export default function SteganographyChallenge() {
         const authResponse = await fetch('/api/auth/check', {
           credentials: 'include'
         });
-        const authData = await authResponse.json();
+        const authData = await authResponse.json() as AuthResponse;
         if (authData.authenticated) {
           setUserPoints(authData.user.points);
         }
@@ -35,13 +61,13 @@ export default function SteganographyChallenge() {
         const response = await fetch('/api/questions', {
           credentials: 'include'
         })
-        const data = await response.json()
+        const data = await response.json() as Category[];
         
-        const stegCategory = data.find((cat: any) => 
-          cat.challenges.some((c: any) => c.id === 1)
+        const stegCategory = data.find((cat: Category) => 
+          cat.challenges.some((c: Challenge) => c.id === 1)
         )
         if (stegCategory) {
-          const challenge = stegCategory.challenges.find((c: any) => c.id === 1)
+          const challenge = stegCategory.challenges.find((c: Challenge) => c.id === 1)
           setIsSolved(challenge?.solved || false)
           setHintUnlocked(challenge?.hintUnlocked || false)
         }
@@ -186,7 +212,7 @@ export default function SteganographyChallenge() {
               {hintUnlocked ? (
                 <p className="text-gray-400">
                   HTML elements can have various attributes. Some might be more 
-                  helpful than others when you're looking for something...
+                  helpful than others when you&apos;re looking for something...
                 </p>
               ) : (
                 <div className="text-center py-4">
@@ -210,7 +236,7 @@ export default function SteganographyChallenge() {
             <h2 className="text-lg font-semibold mb-4">Submit Flag</h2>
             {isSolved ? (
               <div className="text-[#00FF9D] text-sm">
-                You've already solved this challenge! 
+                You&apos;ve already solved this challenge! 
                 <Link href="/dashboard" className="block mt-2 text-[#00FF9D] hover:underline">
                   Return to dashboard
                 </Link>
