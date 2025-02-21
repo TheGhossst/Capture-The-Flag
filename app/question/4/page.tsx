@@ -60,7 +60,6 @@ export default function MinesweeperChallenge() {
     } | null>(null);
     const [isAdmin, setIsAdmin] = useState<boolean>(false);
     const [flagInput, setFlagInput] = useState<string>("");
-    const [showFlagInput, setShowFlagInput] = useState<boolean>(false);
 
     useEffect(() => {
         async function checkStatus() {
@@ -109,16 +108,24 @@ export default function MinesweeperChallenge() {
     }, []);
 
     useEffect(() => {
-        (window as any).revealMinesForAdmin = async (secretKey: string) => {
+        interface AdminResponse {
+            authenticated: boolean;
+            user: {
+                username: string;
+            };
+        }
+
+        const revealMinesForAdmin = async (secretKey: string) => {
             try {
                 const response = await fetch('/api/auth/check', {
                     credentials: 'include'
                 });
-                const data = await response.json();
-
+                const data = await response.json() as AdminResponse;
+                
                 if (data.authenticated && data.user.username === 'admin' && secretKey === 'hashctf2024') {
                     setIsAdmin(true);
-                    const newRevealed = revealed.map((row, i) =>
+                    console.log(isAdmin);
+                    const newRevealed = revealed.map((row, i) => 
                         row.map((cell, j) => grid[i][j] === 'M' ? true : cell)
                     );
                     setRevealed(newRevealed);
@@ -131,10 +138,12 @@ export default function MinesweeperChallenge() {
             }
         };
 
+        (window as Window & { revealMinesForAdmin?: typeof revealMinesForAdmin }).revealMinesForAdmin = revealMinesForAdmin;
+
         return () => {
-            delete (window as any).revealMinesForAdmin;
+            delete (window as Window & { revealMinesForAdmin?: typeof revealMinesForAdmin }).revealMinesForAdmin;
         };
-    }, [grid, revealed]);
+    }, [grid, revealed, isAdmin]);
 
     const initializeGame = (): void => {
         const newGrid: (number | 'M')[][] = Array(GRID_SIZE).fill(null).map(() => Array(GRID_SIZE).fill(0));
@@ -217,15 +226,6 @@ export default function MinesweeperChallenge() {
         setRevealed(newRevealed);
     };
 
-    const revealAllMinesForAdmin = () => {
-        if (!isAdmin) return;
-
-        const newRevealed = revealed.map((row, i) =>
-            row.map((cell, j) => grid[i][j] === 'M' ? true : cell)
-        );
-        setRevealed(newRevealed);
-    };
-
     const toggleFlag = (x: number, y: number, e: React.MouseEvent): void => {
         e.preventDefault(); // Prevent context menu
         if (gameOver || revealed[x][y]) return;
@@ -287,7 +287,6 @@ export default function MinesweeperChallenge() {
             setWon(true);
             setGameOver(true);
             revealAllMines();
-            setShowFlagInput(true);
         }
     };
 
