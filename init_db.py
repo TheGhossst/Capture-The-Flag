@@ -110,6 +110,15 @@ def init_db():
             'points': 200,
             'flag': 'flag{memory_hunter}',
             'hint': 'Check the process memory regions'
+        },
+        {
+            'title': 'MineSweeper',
+            'description': 'Solve this Minesweeper puzzle to find the flag.',
+            'category': 'Miscellaneous',
+            'difficulty': 'Hard',
+            'points': 400,
+            'flag': 'flag{minesweeper_master}',
+            'hint': 'Kaboom'
         }
     ]
 
