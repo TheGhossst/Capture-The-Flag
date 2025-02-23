@@ -178,9 +178,7 @@ export default function MemeTagChallenge() {
                             <div className="bg-[#171B26] p-6 rounded-lg border border-gray-800">
                                 <h2 className="text-lg font-semibold mb-4">Challenge Description</h2>
                                 <p className="text-gray-400 mb-4">
-                                    Sometimes pictures speak louder than words… if you know where to look!
-                                    Check out this meme and find the hidden flag. You might need more
-                                    than your eyes to LOL your way to victory!
+                                   {questionData.description}
                                 </p>
                                 <Image
                                     src="/encoded_image.png"
