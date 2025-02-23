@@ -28,7 +28,7 @@ export default function CookieMonsterChallenge() {
                 document.cookie = "cookie_monster_part2=cookie_; path=/; SameSite=Lax"
                 document.cookie = "cookie_monster_part3=crumble_; path=/; SameSite=Lax"
                 document.cookie = "cookie_monster_part4=complete}; path=/; SameSite=Lax"
-                document.cookie = "nom_nom_nom=Me love cookies!; path=/; SameSite=Lax" // Decoy cookie
+                document.cookie = "nom_nom_nom=Me love cookies!; path=/; SameSite=Lax"
 
                 const authResponse = await fetch('/api/auth/check', {
                     credentials: 'include'
