@@ -183,7 +183,7 @@ export default function MemeTagChallenge() {
                                     than your eyes to LOL your way to victory!
                                 </p>
                                 <Image
-                                    src="/download.png"
+                                    src="/encoded_image.png"
                                     alt="meme with hidden flag"
                                     width={500}
                                     height={500}
