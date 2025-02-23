@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 const GRID_SIZE = 23;
-const MINE_COUNT = 8;
+const MINE_COUNT = 80;
 const TOTAL_POINTS = 100;
 const HINT_COST = Math.floor(TOTAL_POINTS / 3);
 
