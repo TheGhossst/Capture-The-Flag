@@ -6,37 +6,13 @@ import Link from "next/link";
 import { ArrowLeft, HelpCircle, Trophy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { AuthResponse, Category } from "../types/type"
 
 const GRID_SIZE = 23;
 const MINE_COUNT = 80;
 const TOTAL_POINTS = 100;
 const HINT_COST = Math.floor(TOTAL_POINTS / 3);
 
-interface Challenge {
-    id: number;
-    title: string;
-    description: string;
-    difficulty: string;
-    points: number;
-    hint: string;
-    solved: boolean;
-    hintUnlocked: boolean;
-}
-
-interface Category {
-    id: string;
-    category: string;
-    challenges: Challenge[];
-}
-
-interface AuthResponse {
-    authenticated: boolean;
-    user: {
-        id: number;
-        username: string;
-        points: number;
-    };
-}
 
 export default function MinesweeperChallenge() {
     const router = useRouter();
@@ -121,11 +97,11 @@ export default function MinesweeperChallenge() {
                     credentials: 'include'
                 });
                 const data = await response.json() as AdminResponse;
-                
+
                 if (data.authenticated && data.user.username === 'admin' && secretKey === 'hashctf2024') {
                     setIsAdmin(true);
                     console.log(isAdmin);
-                    const newRevealed = revealed.map((row, i) => 
+                    const newRevealed = revealed.map((row, i) =>
                         row.map((cell, j) => grid[i][j] === 'M' ? true : cell)
                     );
                     setRevealed(newRevealed);

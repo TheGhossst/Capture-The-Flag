@@ -6,33 +6,7 @@ import Link from "next/link"
 import { ArrowLeft, Flag, HelpCircle, Trophy } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-
-// Add interfaces for type safety
-interface Challenge {
-  id: number
-  title: string
-  description: string
-  difficulty: string
-  points: number
-  hint: string
-  solved: boolean
-  hintUnlocked: boolean
-}
-
-interface Category {
-  id: string
-  category: string
-  challenges: Challenge[]
-}
-
-interface AuthResponse {
-  authenticated: boolean
-  user: {
-    id: number
-    username: string
-    points: number
-  }
-}
+import { AuthResponse, Category, Challenge } from "../types/type"
 
 export default function SteganographyChallenge() {
   const router = useRouter()
@@ -62,8 +36,8 @@ export default function SteganographyChallenge() {
           credentials: 'include'
         })
         const data = await response.json() as Category[];
-        
-        const stegCategory = data.find((cat: Category) => 
+
+        const stegCategory = data.find((cat: Category) =>
           cat.challenges.some((c: Challenge) => c.id === 1)
         )
         if (stegCategory) {
@@ -88,7 +62,7 @@ export default function SteganographyChallenge() {
       })
 
       const data = await response.json()
-      
+
       if (data.success) {
         setHintUnlocked(true)
         setUserPoints(prev => prev - hintCost)
@@ -117,7 +91,7 @@ export default function SteganographyChallenge() {
       })
 
       const data = await response.json()
-      
+
       if (data.success) {
         setSuccess(true)
         setIsSolved(true)
@@ -192,9 +166,9 @@ export default function SteganographyChallenge() {
             <div className="bg-[#171B26] p-6 rounded-lg border border-gray-800">
               <h2 className="text-lg font-semibold mb-4">Challenge Description</h2>
               <p className="text-gray-400">
-                Sometimes the most obvious places are the best hiding spots. 
-                The flag is hidden somewhere on this page, but it might not be 
-                where you expect it. Remember, in web development, elements can 
+                Sometimes the most obvious places are the best hiding spots.
+                The flag is hidden somewhere on this page, but it might not be
+                where you expect it. Remember, in web development, elements can
                 have many properties...
               </p>
             </div>
@@ -208,10 +182,10 @@ export default function SteganographyChallenge() {
                   </span>
                 )}
               </div>
-              
+
               {hintUnlocked ? (
                 <p className="text-gray-400">
-                  HTML elements can have various attributes. Some might be more 
+                  HTML elements can have various attributes. Some might be more
                   helpful than others when you&apos;re looking for something...
                 </p>
               ) : (
@@ -229,14 +203,14 @@ export default function SteganographyChallenge() {
                   </Button>
                 </div>
               )}
-            </div>            
+            </div>
           </div>
 
           <div className="bg-[#171B26] p-6 rounded-lg border border-gray-800">
             <h2 className="text-lg font-semibold mb-4">Submit Flag</h2>
             {isSolved ? (
               <div className="text-[#00FF9D] text-sm">
-                You&apos;ve already solved this challenge! 
+                You&apos;ve already solved this challenge!
                 <Link href="/dashboard" className="block mt-2 text-[#00FF9D] hover:underline">
                   Return to dashboard
                 </Link>
